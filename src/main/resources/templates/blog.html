@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Блог</title>
+</head>
+<body>
+<div>
+    <h1>Блог</h1>
+</div>
+<div>
+    <div th:each="post : ${posts}">
+        <h2 th:text="${post.title}">Название поста</h2>
+        <img th:src="${post.imageUrl}" alt="Изображение поста" >
+        <p th:text="${post.content}">Текст поста</p>
+        <div>
+            <span th:each="tag : ${post.tags}" th:text="${tag} ">Тег</span>
+        </div>
+        <div>
+            <span>❤️ <span th:text="${post.likesCount}"></span></span>
+            <span>💬 <span th:text="${post.commentsCount}"></span></span>
+        </div>
+    </div>
+</div>
+</body>
+</html>
