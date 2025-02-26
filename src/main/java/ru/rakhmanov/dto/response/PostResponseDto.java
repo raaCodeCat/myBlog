@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostResponseDto {
-    private Long id;
+    private Integer id;
     private String title;
     private String content;
     private String imageUrl;
