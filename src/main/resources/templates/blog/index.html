@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Лента постов</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        .post-preview {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .post-preview img {
+            max-width: 100%;
+            height: auto;
+        }
+        .post-content-preview {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Лента постов</h1>
+    <div>
+        <label for="pageSize" class="form-label">Постов на странице:</label>
+        <select id="pageSize" class="form-select" onchange="filterPosts()">
+            <option th:selected="${selectedSize == 10}" value="10">10</option>
+            <option th:selected="${selectedSize == 20}" value="20">20</option>
+            <option th:selected="${selectedSize == 50}" value="50">50</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="tagFilter" class="form-label">Фильтр по тегам:</label>
+        <select id="tagFilter" class="form-select" onchange="filterPosts()">
+            <option th:selected="${selectedTagId == -1}" value="-1">Все теги</option>
+            <option th:selected="${selectedTagId == tag.id}" th:each="tag : ${tags}" th:value="${tag.id}" th:text="${tag.name}"></option>
+        </select>
+    </div>
+
+    <div th:each="post : ${posts}" class="post-preview">
+        <h2><a th:href="@{/posts/{id}(id=${post.id})}" th:text="${post.title}"></a></h2>
+        <img th:src="${post.imageUrl}" alt="Post Image" class="img-fluid mb-2">
+        <div class="post-content-preview" th:text="${post.content}"></div>
+        <div>
+            <span>👍 <span th:text="${post.likesCount}"></span></span>
+            <span>💬 <span th:text="${post.commentsCount}"></span></span>
+        </div>
+        <div>
+            <strong>Теги:</strong>
+            <span th:each="tag : ${post.tags}" class="badge bg-secondary me-1" th:text="${tag.name}"></span>
+        </div>
+    </div>
+    <nav aria-label="Page navigation" th:if="${totalPages > 1}">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${currentPage == 0 ? 'disabled' : ''}">
+                <a class="page-link" href="#" th:href="@{/(tagId=${selectedTagId}, page=${currentPage - 1}, size=${selectedSize})}">Предыдущая</a>
+            </li>
+            <li class="page-item" th:classappend="${currentPage == totalPages - 1 ? 'disabled' : ''}">
+                <a class="page-link" href="#" th:href="@{/(tagId=${selectedTagId}, page=${currentPage + 1}, size=${selectedSize})}">Следующая</a>
+            </li>
+        </ul>
+    </nav>
+
+<div class="container mt-5">
+    <button class="btn btn-primary mb-3" onclick="showAddPostForm()">Добавить пост</button>
+
+    <div id="addPostForm" style="display: none;">
+        <form th:action="@{/posts/add}" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="title" class="form-label">Название поста</label>
+                <input type="text" class="form-control" id="title" name="title" required>
+            </div>
+            <div class="mb-3">
+                <label for="image" class="form-label">Картинка</label>
+                <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+            </div>
+            <div class="mb-3">
+                <label for="content" class="form-label">Текст поста</label>
+                <textarea class="form-control" id="content" name="content" rows="5" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="tags" class="form-label">Теги (через запятую)</label>
+                <input type="text" class="form-control" id="tags" name="tags" required>
+            </div>
+            <button type="submit" class="btn btn-success">Сохранить</button>
+            <button type="button" class="btn btn-secondary" onclick="hideAddPostForm()">Отмена</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function showAddPostForm() {
+        document.getElementById('addPostForm').style.display = 'block';
+    }
+
+    function hideAddPostForm() {
+        document.getElementById('addPostForm').style.display = 'none';
+    }
+
+    function filterPosts() {
+        const tagId = document.getElementById('tagFilter').value;
+        const pageSize = document.getElementById('pageSize').value;
+        window.location.href = `/?tagId=${tagId}&size=${pageSize}`;
+    }
+</script>
+</body>
+</html>

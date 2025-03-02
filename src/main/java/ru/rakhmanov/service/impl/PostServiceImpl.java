@@ -20,8 +20,8 @@ public class PostServiceImpl implements PostService {
     private final TagService tagService;
 
     @Override
-    public List<PostFullDto> getAllPosts() {
-        List<Post> posts = postRepository.findAllPosts();
+    public List<PostFullDto> getAllPosts(Integer tagId, Integer page, Integer size) {
+        List<Post> posts = postRepository.findAllPosts(tagId, page, size);
         List<Integer> postIds = posts.stream()
                 .map(Post::getId)
                 .toList();
@@ -32,6 +32,26 @@ public class PostServiceImpl implements PostService {
         enrichPostsByTags(postFullDtos, tagsByPostIds);
 
         return postFullDtos;
+    }
+
+    @Override
+    public PostFullDto getPostById(Integer id) {
+        Post post = postRepository.findPostById(id);
+        PostFullDto postFullDto = PostMapper.mapToPostFullDto(post);
+        List<Tag> tags = tagService.getTagsByPostId(id);
+        postFullDto.setTags(tags);
+
+        return postFullDto;
+    }
+
+    @Override
+    public void deletePostById(Integer id) {
+        postRepository.deletePostById(id);
+    }
+
+    @Override
+    public Integer getPostCount(Integer tagId) {
+        return postRepository.countPosts(tagId);
     }
 
     private void enrichPostsByTags (List<PostFullDto> postFullDtos, Map<Integer, List<Tag>> tagsByPostIds) {
