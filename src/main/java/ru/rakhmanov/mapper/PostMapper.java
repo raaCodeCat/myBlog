@@ -2,7 +2,7 @@ package ru.rakhmanov.mapper;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import ru.rakhmanov.dto.response.PostResponseDto;
+import ru.rakhmanov.dto.response.PostFullDto;
 import ru.rakhmanov.model.Post;
 
 import java.util.List;
@@ -10,23 +10,23 @@ import java.util.List;
 //TODO перейти на mapstruct
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PostMapper {
-    public static List<PostResponseDto> mapToPostResponseDto(List<Post> posts) {
+    public static List<PostFullDto> mapToPostFullDto(List<Post> posts) {
         return posts.stream()
-                .map(PostMapper::mapToPostResponseDto)
+                .map(PostMapper::mapToPostFullDto)
                 .toList();
     }
 
-    public static PostResponseDto mapToPostResponseDto(Post post) {
-        PostResponseDto postResponseDto = new PostResponseDto(
+    public static PostFullDto mapToPostFullDto(Post post) {
+        PostFullDto postFullDto = new PostFullDto(
                 post.getId(),
                 post.getTitle(),
                 post.getContent(),
                 post.getImageUrl(),
-                post.getTags(),
+                List.of(),
                 0L,
                 0L
         );
 
-        return postResponseDto;
+        return postFullDto;
     }
 }

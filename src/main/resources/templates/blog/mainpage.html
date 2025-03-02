@@ -14,7 +14,7 @@
         <img th:src="${post.imageUrl}" alt="Изображение поста" >
         <p th:text="${post.content}">Текст поста</p>
         <div>
-            <span th:each="tag : ${post.tags}" th:text="${tag} ">Тег</span>
+            <span th:each="tag : ${post.tags}" th:text="${tag.name} ">Тег</span>
         </div>
         <div>
             <span>❤️ <span th:text="${post.likesCount}"></span></span>

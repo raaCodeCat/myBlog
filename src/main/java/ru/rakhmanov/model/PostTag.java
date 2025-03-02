@@ -9,9 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Post {
-    private Integer id;
-    private String title;
-    private String content;
-    private String imageUrl;
+public class PostTag {
+    private Integer postId;
+    private Integer tagId;
+    private String tagName;
 }

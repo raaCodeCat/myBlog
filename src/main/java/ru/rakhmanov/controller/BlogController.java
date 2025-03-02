@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.rakhmanov.dto.response.PostResponseDto;
+import ru.rakhmanov.dto.response.PostFullDto;
 import ru.rakhmanov.service.PostService;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class BlogController {
     @GetMapping
     public String getBlogPage(Model model) {
 
-        List<PostResponseDto> posts = postService.getAllPosts();
+        List<PostFullDto> posts = postService.getAllPosts();
 
         model.addAttribute("posts", posts);
         return "blog/mainpage";

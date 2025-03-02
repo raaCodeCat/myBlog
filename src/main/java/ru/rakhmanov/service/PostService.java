@@ -1,9 +1,9 @@
 package ru.rakhmanov.service;
 
-import ru.rakhmanov.dto.response.PostResponseDto;
+import ru.rakhmanov.dto.response.PostFullDto;
 
 import java.util.List;
 
 public interface PostService {
-    List<PostResponseDto> getAllPosts();
+    List<PostFullDto> getAllPosts();
 }
