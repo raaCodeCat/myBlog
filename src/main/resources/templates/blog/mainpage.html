@@ -10,7 +10,7 @@
 </div>
 <div>
     <div th:each="post : ${posts}">
-        <h2 th:text="${post.title}">Название поста</h2>
+        <a th:href="@{/post/{id}(id=${post.id})}" th:text="${post.title}">Название поста</a><br>
         <img th:src="${post.imageUrl}" alt="Изображение поста" >
         <p th:text="${post.content}">Текст поста</p>
         <div>

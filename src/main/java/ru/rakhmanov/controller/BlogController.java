@@ -19,31 +19,10 @@ public class BlogController {
     @GetMapping
     public String getBlogPage(Model model) {
 
-//        List<PostResponseDto> posts = Arrays.asList(
-//                new PostResponseDto(
-//                        1L,
-//                        "Первая запись в блоге",
-//                        "Это текст первой записи в блоге. Здесь может быть много текста.",
-//                        "somepath.png",
-//                        Arrays.asList("новости", "технологии"),
-//                        10L,
-//                        2L
-//                ),
-//                new PostResponseDto(
-//                        2L,
-//                        "Вторая запись в блоге",
-//                        "Это текст второй записи в блоге. Здесь тоже может быть много текста.",
-//                        "somepath.png",
-//                        Arrays.asList("путешествия", "фото"),
-//                        11L,
-//                        3L
-//                )
-//        );
-
         List<PostResponseDto> posts = postService.getAllPosts();
 
         model.addAttribute("posts", posts);
-        return "blog";
+        return "blog/mainpage";
     }
 }
 

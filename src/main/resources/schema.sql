@@ -31,8 +31,9 @@ create table if not exists posttags (
 );
 
 -- Данные для первичной проверка работы блога
-insert into posts(post_title, post_content, post_image_url) values ('Пост 1', 'Это пост номер 1', '/img/img.png');
-insert into posts(post_title, post_content, post_image_url) values ('Пост 2', 'Это пост номер 2', '/img/img.png');
-insert into posts(post_title, post_content, post_image_url) values ('Пост 3', 'Это пост номер 3', '/img/img.png');
+insert into posts(post_title, post_content, post_image_url) values
+    ('Пост 1', 'Это пост номер 1', '/img/img.png'),
+    ('Пост 2', 'Это пост номер 2', '/img/img.png'),
+    ('Пост 3', 'Это пост номер 3', '/img/img.png');
 
 
