@@ -46,7 +46,7 @@
     <div class="mt-5">
         <h3>Добавить комментарий</h3>
         <form th:action="@{/posts/{id}/comments/add(id=${post.id})}" method="post">
-            <textarea name="commentText" class="form-control mb-2" placeholder="Ваш комментарий" required></textarea>
+            <textarea name="commentText" class="form-control mb-2" required></textarea>
             <button type="submit" class="btn btn-success">Добавить комментарий</button>
         </form>
     </div>
@@ -54,18 +54,16 @@
     <div class="mt-5">
         <h3>Комментарии</h3>
         <div th:each="comment : ${comments}" class="comment">
-            <p class="comment-text" th:text="${comment.content}"></p>
-            <div class="comment-edit">
-                <textarea maxlength="300" class="form-control mb-2" th:data-comment-id="${comment.id}"></textarea>
-                <button class="btn btn-sm btn-primary" onclick="saveComment(event)">Сохранить</button>
-                <button class="btn btn-sm btn-secondary" onclick="cancelEditComment(event)">Отмена</button>
-            </div>
-            <div>
-                <button class="btn btn-sm btn-warning" onclick="editComment(event)">Редактировать</button>
-                <form th:action="@{/comments/{id}/delete(id=${comment.id})}" method="post" style="display: inline;">
-                    <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
-                </form>
-            </div>
+            <form class="comment-form" th:action="@{/comments/{id}/edit(id=${comment.id})}" method="post">
+                <div class="mb-3">
+                    <textarea name="postId" hidden="" th:text="${post.id}"></textarea>
+                    <textarea id="comment" name="commentText" class="form-control mb-2 comment-textarea" rows="5" th:text="${comment.content}"></textarea>
+                </div>
+            </form>
+            <form th:action="@{/comments/{id}/delete(id=${comment.id})}" method="post">
+                <textarea name="postId" hidden="" th:text="${post.id}"></textarea>
+                <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
+            </form>
         </div>
     </div>
 </div>
@@ -84,46 +82,17 @@
             })
             .catch(error => console.error('Ошибка:', error));
     }
-
-    function editComment(event) {
-        const commentDiv = event.target.closest('.comment');
-        const commentText = commentDiv.querySelector('.comment-text');
-        const commentEdit = commentDiv.querySelector('.comment-edit');
-        const textarea = commentEdit.querySelector('textarea');
-        textarea.value = commentText.textContent;
-        commentText.style.display = 'none';
-        commentEdit.style.display = 'block';
-    }
-
-    function saveComment(event) {
-        const commentDiv = event.target.closest('.comment');
-        const commentId = commentDiv.querySelector('textarea').dataset.commentId;
-        const newText = commentDiv.querySelector('textarea').value;
-
-        fetch('/comments/' + commentId + '/edit', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ text: newText }),
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const commentText = commentDiv.querySelector('.comment-text');
-                    commentText.textContent = newText;
-                    commentText.style.display = 'block';
-                    commentDiv.querySelector('.comment-edit').style.display = 'none';
-                }
-            })
-            .catch(error => console.error('Ошибка:', error));
-    }
-
-    function cancelEditComment(event) {
-        const commentDiv = event.target.closest('.comment');
-        commentDiv.querySelector('.comment-text').style.display = 'block';
-        commentDiv.querySelector('.comment-edit').style.display = 'none';
-    }
+</script>
+<script>
+    document.querySelectorAll('.comment-textarea').forEach(textarea => {
+        textarea.addEventListener('keydown', function(event) {
+            if (event.ctrlKey && event.key === 'Enter') {
+                event.preventDefault();
+                const form = textarea.closest('.comment-form');
+                form.submit();
+            }
+        });
+    });
 </script>
 </body>
 </html>

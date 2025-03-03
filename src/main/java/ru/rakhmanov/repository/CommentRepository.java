@@ -15,4 +15,8 @@ public interface CommentRepository {
 
     Map<Integer, Integer> getCommentsCountByPostIds(List<Integer> postIds);
 
+    void editComment(Integer commentId, String commentText);
+
+    void deleteComment(Integer commentId);
+
 }

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import ru.rakhmanov.model.Comment;
 import ru.rakhmanov.repository.CommentRepository;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -54,6 +53,18 @@ public class JdbcCommentRepository implements CommentRepository {
 
         return postCommentCounts.stream()
                 .collect(Collectors.toMap(PostCommentCount::getPostId, PostCommentCount::getCommentCount));
+    }
+
+    @Override
+    public void editComment(Integer commentId, String commentText) {
+        String sql = "update comments set comment_content = ? where comment_id = ?";
+        jdbcTemplate.update(sql, commentText, commentId);
+    }
+
+    @Override
+    public void deleteComment(Integer commentId) {
+        String sql = "delete from comments where comment_id = ?";
+        jdbcTemplate.update(sql, commentId);
     }
 
     private static RowMapper<Comment> commentRowMapper() {
