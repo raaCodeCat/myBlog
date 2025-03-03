@@ -7,6 +7,7 @@ import ru.rakhmanov.dto.response.PostFullDto;
 import ru.rakhmanov.mapper.PostMapper;
 import ru.rakhmanov.model.Post;
 import ru.rakhmanov.model.Tag;
+import ru.rakhmanov.repository.CommentRepository;
 import ru.rakhmanov.repository.PostRepository;
 import ru.rakhmanov.repository.TagRepository;
 import ru.rakhmanov.service.PostService;
@@ -19,6 +20,7 @@ import java.util.Map;
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final TagRepository tagRepository;
+    private final CommentRepository commentRepository;
 
     @Override
     public List<PostFullDto> getAllPosts(Integer tagId, Integer page, Integer size) {
@@ -29,8 +31,10 @@ public class PostServiceImpl implements PostService {
 
         List<PostFullDto> postFullDtos = PostMapper.mapToPostFullDto(posts);
         Map<Integer, List<Tag>> tagsByPostIds = tagRepository.findTagsByPostId(postIds);
+        Map<Integer, Integer> commentsCounts = commentRepository.getCommentsCountByPostIds(postIds);
 
         enrichPostsByTags(postFullDtos, tagsByPostIds);
+        enrichPostByComments(postFullDtos, commentsCounts);
 
         return postFullDtos;
     }
@@ -72,5 +76,9 @@ public class PostServiceImpl implements PostService {
 
     private void enrichPostsByTags (List<PostFullDto> postFullDtos, Map<Integer, List<Tag>> tagsByPostIds) {
         postFullDtos.forEach(post -> post.setTags(tagsByPostIds.getOrDefault(post.getId(), List.of())));
+    }
+
+    private void enrichPostByComments(List<PostFullDto> postFullDtos, Map<Integer, Integer> commentsCounts) {
+        postFullDtos.forEach(post -> post.setCommentsCount(commentsCounts.getOrDefault(post.getId(), 0)));
     }
 }

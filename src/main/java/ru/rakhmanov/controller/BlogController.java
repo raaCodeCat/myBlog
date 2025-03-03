@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.rakhmanov.dto.response.PostFullDto;
 import ru.rakhmanov.model.Tag;
+import ru.rakhmanov.service.CommentService;
 import ru.rakhmanov.service.PostService;
 import ru.rakhmanov.service.TagService;
 
@@ -17,9 +18,10 @@ import java.util.List;
 @RequestMapping("/")
 @RequiredArgsConstructor
 public class BlogController {
-    private final PostService postService;
 
+    private final PostService postService;
     private final TagService tagService;
+    private final CommentService commentService;
 
     @GetMapping
     public String getBlogPage(@RequestParam(name = "tagId", required = false) Integer selectedTagId,
@@ -33,6 +35,7 @@ public class BlogController {
         List<Tag> tags = tagService.getAllTags();
         Integer postsCount = postService.getPostCount(tagId);
         int totalPages = (int) Math.ceil((double) postsCount / size);
+
 
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);

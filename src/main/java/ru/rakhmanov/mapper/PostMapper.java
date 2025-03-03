@@ -23,8 +23,8 @@ public class PostMapper {
                 post.getContent(),
                 post.getImageUrl(),
                 List.of(),
-                0L,
-                0L
+                0,
+                0
         );
 
         return postFullDto;

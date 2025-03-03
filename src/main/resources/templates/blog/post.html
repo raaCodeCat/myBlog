@@ -53,10 +53,10 @@
 
     <div class="mt-5">
         <h3>Комментарии</h3>
-        <div th:each="comment : ${post.comments}" class="comment">
-            <p class="comment-text" th:text="${comment.text}"></p>
+        <div th:each="comment : ${comments}" class="comment">
+            <p class="comment-text" th:text="${comment.content}"></p>
             <div class="comment-edit">
-                <textarea class="form-control mb-2" th:data-comment-id="${comment.id}"></textarea>
+                <textarea maxlength="300" class="form-control mb-2" th:data-comment-id="${comment.id}"></textarea>
                 <button class="btn btn-sm btn-primary" onclick="saveComment(event)">Сохранить</button>
                 <button class="btn btn-sm btn-secondary" onclick="cancelEditComment(event)">Отмена</button>
             </div>
@@ -80,7 +80,7 @@
         })
             .then(response => response.json())
             .then(data => {
-                document.getElementById('likeCount').textContent = data.likeCount;
+                document.getElementById('likesCount').textContent = data.likesCount;
             })
             .catch(error => console.error('Ошибка:', error));
     }

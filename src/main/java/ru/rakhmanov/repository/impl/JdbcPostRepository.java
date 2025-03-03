@@ -10,7 +10,6 @@ import ru.rakhmanov.model.Post;
 import ru.rakhmanov.repository.PostRepository;
 
 import java.sql.PreparedStatement;
-import java.sql.Timestamp;
 import java.util.List;
 
 @Repository

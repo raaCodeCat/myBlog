@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.rakhmanov.dto.response.PostFullDto;
+import ru.rakhmanov.model.Comment;
+import ru.rakhmanov.service.CommentService;
 import ru.rakhmanov.service.PostService;
 
 import java.io.IOException;
@@ -21,11 +23,14 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+    private final CommentService commentService;
 
     @GetMapping("/{id}")
     public String getPost(@PathVariable("id") Integer id, Model model) {
         PostFullDto post = postService.getPostById(id);
+        List<Comment> comments = commentService.getCommentsByPostId(id);
         model.addAttribute("post", post);
+        model.addAttribute("comments", comments);
         return "blog/post";
     }
 
@@ -34,6 +39,15 @@ public class PostController {
         postService.deletePostById(id);
 
         return "redirect:/";
+    }
+
+    @PostMapping("/{id}/comments/add")
+    public String addComment(@PathVariable(name = "id") Integer id,
+                             @RequestParam("commentText") String commentText) {
+
+        commentService.addComment(id, commentText);
+
+        return "redirect:/posts/" + id;
     }
 
     @PostMapping("/add")

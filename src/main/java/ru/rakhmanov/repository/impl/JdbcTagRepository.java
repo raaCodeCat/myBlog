@@ -28,7 +28,7 @@ public class JdbcTagRepository implements TagRepository {
     @Override
     public List<Tag> findTagsByPostId(Integer postId) {
         if (postId == null) {
-            return null;
+            return List.of();
         }
 
         String sql = """
@@ -43,7 +43,7 @@ public class JdbcTagRepository implements TagRepository {
     @Override
     public Map<Integer, List<Tag>> findTagsByPostId(List<Integer> postIds) {
         if (postIds == null || postIds.isEmpty()) {
-            return null;
+            return Map.of();
         }
 
         String ids = StringUtils.join(postIds, ",");

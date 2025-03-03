@@ -18,6 +18,6 @@ public class PostFullDto {
     private String content;
     private String imageUrl;
     private List<Tag> tags;
-    private Long likesCount = 0L;
-    private Long commentsCount = 0L;
+    private Integer likesCount = 0;
+    private Integer commentsCount = 0;
 }
