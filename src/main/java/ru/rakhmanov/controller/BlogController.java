@@ -27,7 +27,7 @@ public class BlogController {
                               @RequestParam(name = "size", defaultValue = "10") Integer size,
                               Model model) {
 
-        Integer tagId = selectedTagId == null || selectedTagId == -1 ? null : selectedTagId;
+        Integer tagId = selectedTagId == null || selectedTagId < 0 ? null : selectedTagId;
 
         List<PostFullDto> posts = postService.getAllPosts(tagId, page, size);
         List<Tag> tags = tagService.getAllTags();

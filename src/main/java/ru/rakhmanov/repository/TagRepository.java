@@ -13,4 +13,6 @@ public interface TagRepository {
 
     Map<Integer, List<Tag>> findTagsByPostId(List<Integer> postIds);
 
+    void saveTagsToPost(Integer postId, List<Integer> tagIds);
+
 }

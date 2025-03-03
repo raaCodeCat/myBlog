@@ -65,6 +65,16 @@ public class JdbcTagRepository implements TagRepository {
                 ));
     }
 
+    @Override
+    public void saveTagsToPost(Integer postId, List<Integer> tagIds) {
+        String sqlValues = tagIds.stream()
+                .map(tag -> "(" + postId + "," + tag + ")")
+                .collect(Collectors.joining(","));
+        String sql = "insert into posttags (post_id, tag_id) values " + sqlValues;
+
+        jdbcTemplate.update(sql);
+    }
+
     private static RowMapper<Tag> tagRowMapper() {
         return (rs, rowNum) -> new Tag (
                 rs.getInt("tag_id"),

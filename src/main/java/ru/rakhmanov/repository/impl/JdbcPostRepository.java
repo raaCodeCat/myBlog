@@ -3,10 +3,14 @@ package ru.rakhmanov.repository.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.rakhmanov.model.Post;
 import ru.rakhmanov.repository.PostRepository;
 
+import java.sql.PreparedStatement;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Repository
@@ -61,6 +65,23 @@ public class JdbcPostRepository implements PostRepository {
 
         String sql = "select count(*) from posts p" + tagOption;
         return jdbcTemplate.queryForObject(sql, Integer.class);
+    }
+
+    @Override
+    public Integer savePost(Post post) {
+        String sql = "insert into posts(post_title, post_content, post_image_url) values(?,?,?)";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[] {"post_id"});
+            ps.setString(1, post.getTitle());
+            ps.setString(2, post.getContent());
+            ps.setString(3, post.getImageUrl());
+            return ps;
+        }, keyHolder);
+
+        return (Integer) (keyHolder.getKey());
     }
 
     private static RowMapper<Post> postRowMapper() {

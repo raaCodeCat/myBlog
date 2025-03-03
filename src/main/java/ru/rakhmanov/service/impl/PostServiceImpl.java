@@ -2,13 +2,14 @@ package ru.rakhmanov.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.rakhmanov.dto.response.PostFullDto;
 import ru.rakhmanov.mapper.PostMapper;
 import ru.rakhmanov.model.Post;
 import ru.rakhmanov.model.Tag;
 import ru.rakhmanov.repository.PostRepository;
+import ru.rakhmanov.repository.TagRepository;
 import ru.rakhmanov.service.PostService;
-import ru.rakhmanov.service.TagService;
 
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
-    private final TagService tagService;
+    private final TagRepository tagRepository;
 
     @Override
     public List<PostFullDto> getAllPosts(Integer tagId, Integer page, Integer size) {
@@ -27,7 +28,7 @@ public class PostServiceImpl implements PostService {
                 .toList();
 
         List<PostFullDto> postFullDtos = PostMapper.mapToPostFullDto(posts);
-        Map<Integer, List<Tag>> tagsByPostIds = tagService.getTagsByPostIds(postIds);
+        Map<Integer, List<Tag>> tagsByPostIds = tagRepository.findTagsByPostId(postIds);
 
         enrichPostsByTags(postFullDtos, tagsByPostIds);
 
@@ -38,7 +39,7 @@ public class PostServiceImpl implements PostService {
     public PostFullDto getPostById(Integer id) {
         Post post = postRepository.findPostById(id);
         PostFullDto postFullDto = PostMapper.mapToPostFullDto(post);
-        List<Tag> tags = tagService.getTagsByPostId(id);
+        List<Tag> tags = tagRepository.findTagsByPostId(id);
         postFullDto.setTags(tags);
 
         return postFullDto;
@@ -52,6 +53,21 @@ public class PostServiceImpl implements PostService {
     @Override
     public Integer getPostCount(Integer tagId) {
         return postRepository.countPosts(tagId);
+    }
+
+    @Override
+    @Transactional
+    public void createPost(String title, String imageUrl, String content, List<Integer> tagIds) {
+        Post post = new Post();
+        post.setTitle(title);
+        post.setContent(content);
+        post.setImageUrl(imageUrl);
+
+        Integer postId = postRepository.savePost(post);
+
+        if (tagIds != null || tagIds.size() > 0) {
+            tagRepository.saveTagsToPost(postId, tagIds);
+        }
     }
 
     private void enrichPostsByTags (List<PostFullDto> postFullDtos, Map<Integer, List<Tag>> tagsByPostIds) {

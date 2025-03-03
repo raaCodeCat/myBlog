@@ -14,4 +14,6 @@ public interface PostRepository {
 
     Integer countPosts(Integer tagId);
 
+    Integer savePost(Post post);
+
 }

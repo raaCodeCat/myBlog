@@ -1,6 +1,5 @@
 package ru.rakhmanov.service;
 
-import org.springframework.data.relational.core.sql.In;
 import ru.rakhmanov.dto.response.PostFullDto;
 
 import java.util.List;
@@ -14,5 +13,7 @@ public interface PostService {
     void deletePostById(Integer id);
 
     Integer getPostCount(Integer tagId);
+
+    void createPost(String title, String imageUrl, String content, List<Integer> tagIds);
 
 }

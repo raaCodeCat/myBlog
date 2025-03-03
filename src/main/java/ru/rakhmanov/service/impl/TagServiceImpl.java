@@ -21,12 +21,8 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<Tag> getTagsByPostId(Integer postId) {
-        return tagRepository.findTagsByPostId(postId);
-    }
-
-    @Override
     public Map<Integer, List<Tag>> getTagsByPostIds(List<Integer> postIds) {
         return tagRepository.findTagsByPostId(postIds);
     }
+
 }
