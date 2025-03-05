@@ -44,6 +44,35 @@
         </select>
     </div>
 
+    <div class="container mt-5">
+        <button class="btn btn-primary mb-3" onclick="showAddPostForm()">Добавить пост</button>
+
+        <div id="addPostForm" style="display: none;">
+            <form th:action="@{/posts/add}" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Название поста</label>
+                    <input type="text" class="form-control" id="title" name="title" maxlength="50" required>
+                </div>
+                <div class="mb-3">
+                    <label for="image" class="form-label">Картинка</label>
+                    <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+                </div>
+                <div class="mb-3">
+                    <label for="content" class="form-label">Текст поста</label>
+                    <textarea class="form-control" id="content" name="content" rows="5" maxlength="2048" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="tags" class="form-label">Теги</label>
+                    <select id="tags" name="tags" class="form-select" multiple="multiple">
+                        <option th:each="tag : ${tags}" th:value="${tag.id}" th:text="${tag.name}"></option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-success">Сохранить</button>
+                <button type="button" class="btn btn-secondary" onclick="hideAddPostForm()">Отмена</button>
+            </form>
+        </div>
+    </div>
+
     <div th:each="post : ${posts}" class="post-preview">
         <h2><a th:href="@{/posts/{id}(id=${post.id})}" th:text="${post.title}"></a></h2>
         <img th:src="${post.imageUrl}" alt="Post Image" class="img-fluid mb-2">
@@ -67,34 +96,6 @@
             </li>
         </ul>
     </nav>
-</div>
-<div class="container mt-5">
-    <button class="btn btn-primary mb-3" onclick="showAddPostForm()">Добавить пост</button>
-
-    <div id="addPostForm" style="display: none;">
-        <form th:action="@{/posts/add}" method="post" enctype="multipart/form-data">
-            <div class="mb-3">
-                <label for="title" class="form-label">Название поста</label>
-                <input type="text" class="form-control" id="title" name="title" required>
-            </div>
-            <div class="mb-3">
-                <label for="image" class="form-label">Картинка</label>
-                <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
-            </div>
-            <div class="mb-3">
-                <label for="content" class="form-label">Текст поста</label>
-                <textarea class="form-control" id="content" name="content" rows="5" required></textarea>
-            </div>
-            <div class="mb-3">
-                <label for="tags" class="form-label">Теги</label>
-                <select id="tags" name="tags" class="form-select" multiple="multiple" required>
-                    <option th:each="tag : ${tags}" th:value="${tag.id}" th:text="${tag.name}"></option>
-                </select>
-            </div>
-            <button type="submit" class="btn btn-success">Сохранить</button>
-            <button type="button" class="btn btn-secondary" onclick="hideAddPostForm()">Отмена</button>
-        </form>
-    </div>
 </div>
 
 <script>

@@ -37,7 +37,7 @@ public class JdbcPostRepository implements PostRepository {
         String sql = "select p.post_id, p.post_title, p.post_content, p.post_image_url from posts p " +
                 joinString +
                 "where (1 =  1) " +
-                whereString + offsetLimit;
+                whereString + " order by p.post_id desc " + offsetLimit;
 
         return jdbcTemplate.query(sql, postRowMapper());
     }
