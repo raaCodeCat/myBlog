@@ -87,7 +87,7 @@ public class JdbcPostRepository implements PostRepository {
     @Override
     public void updatePost(Integer postId, String title, String imageUrl, String content) {
         String sql = "update posts set post_title = ?, post_content = ?, post_image_url = ? where post_id = ?";
-        jdbcTemplate.update(sql, title, content, postId, postId);
+        jdbcTemplate.update(sql, title, content, imageUrl, postId);
     }
 
     private static RowMapper<Post> postRowMapper() {

@@ -25,6 +25,9 @@ import java.util.List;
 @AllArgsConstructor
 public class PostController {
 
+    private static final String LINK_PATH = "/uploads/";
+    private static final String UPLOAD_DIR = System.getProperty("catalina.base") + "/webapps" + LINK_PATH;
+
     private final PostService postService;
     private final CommentService commentService;
     private final LikeService likeService;
@@ -49,19 +52,16 @@ public class PostController {
     public String createPost(@RequestParam(name = "title") String title,
                              @RequestParam(name = "content") String content,
                              @RequestParam(name = "tags") List<Integer> tags,
-                             @RequestParam(name = "image") MultipartFile image,
-                             RedirectAttributes redirectAttributes) {
+                             @RequestParam(name = "image") MultipartFile image) {
 
         try {
             String imageUrl = saveImage(image);
             postService.createPost(title, imageUrl, content, tags);
-            redirectAttributes.addFlashAttribute("message", "Пост успешно создан!");
+            return "redirect:/";
         } catch (IOException e) {
 
-            redirectAttributes.addFlashAttribute("error", "Ошибка при загрузке картинки.");
+            return "redirect:/";
         }
-
-        return "redirect:/";
     }
 
     @PostMapping("/{id}/edit")
@@ -75,13 +75,11 @@ public class PostController {
         try {
             String imageUrl = saveImage(image);
             postService.editPost(id, title, imageUrl, content, tags);
-            redirectAttributes.addFlashAttribute("message", "Пост успешно создан!");
+
+            return "redirect:/posts/" + id;
         } catch (IOException e) {
-
-            redirectAttributes.addFlashAttribute("error", "Ошибка при загрузке картинки.");
+            return "redirect:/posts/" + id;
         }
-
-        return "redirect:/posts/" + id;
     }
 
     @PostMapping("/{id}/delete")
@@ -108,8 +106,7 @@ public class PostController {
     }
 
     private String saveImage(MultipartFile image) throws IOException {
-        String uploadDir = "uploads/";
-        Path uploadPath = Paths.get(uploadDir);
+        Path uploadPath = Paths.get(UPLOAD_DIR);
 
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
@@ -118,9 +115,9 @@ public class PostController {
         String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
         Path filePath = uploadPath.resolve(fileName);
 
-        Files.copy(image.getInputStream(), filePath);
+        Files.write(filePath, image.getBytes());
 
-        return "/" + uploadDir + fileName;
+        return LINK_PATH + fileName;
     }
 
 }
