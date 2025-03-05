@@ -9,6 +9,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.rakhmanov.dto.response.PostFullDto;
 import ru.rakhmanov.model.Comment;
 import ru.rakhmanov.service.CommentService;
+import ru.rakhmanov.service.LikeService;
 import ru.rakhmanov.service.PostService;
 
 import java.io.IOException;
@@ -18,30 +19,35 @@ import java.nio.file.Paths;
 import java.util.List;
 
 @Controller
-@RequestMapping("/posts")
+@RequestMapping("/posts/{id}")
 @AllArgsConstructor
 public class PostController {
 
     private final PostService postService;
     private final CommentService commentService;
+    private final LikeService likeService;
 
-    @GetMapping("/{id}")
+    @GetMapping
     public String getPost(@PathVariable("id") Integer id, Model model) {
         PostFullDto post = postService.getPostById(id);
         List<Comment> comments = commentService.getCommentsByPostId(id);
+        Integer likesCount = likeService.getLikesCountByPostId(id);
+
         model.addAttribute("post", post);
         model.addAttribute("comments", comments);
+        model.addAttribute("likesCount", likesCount);
+
         return "blog/post";
     }
 
-    @PostMapping("/{id}/delete")
+    @PostMapping("/delete")
     public String deletePost(@PathVariable("id") Integer id, Model model) {
         postService.deletePostById(id);
 
         return "redirect:/";
     }
 
-    @PostMapping("/{id}/comments/add")
+    @PostMapping("/comments/add")
     public String addComment(@PathVariable(name = "id") Integer id,
                              @RequestParam("commentText") String commentText) {
 
@@ -67,6 +73,13 @@ public class PostController {
         }
 
         return "redirect:/";
+    }
+
+    @PostMapping("/like")
+    public String likePost(@PathVariable(name = "id") Integer id) {
+        postService.likePost(id);
+
+        return "redirect:/posts/" + id;
     }
 
     private String saveImage(MultipartFile image) throws IOException {

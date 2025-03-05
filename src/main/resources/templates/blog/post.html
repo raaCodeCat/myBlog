@@ -14,12 +14,12 @@
             border: 1px solid #ddd;
             border-radius: 5px;
         }
-        .comment-edit {
-            display: none;
-        }
     </style>
 </head>
 <body>
+<div class="container mt-5">
+    <h3><a th:href="@{/}" >&lt;&lt;Назад</a></h3>
+</div>
 <div class="container mt-5">
     <h1 th:text="${post.title}">Post Title</h1>
     <img th:src="${post.imageUrl}" alt="Post Image" class="img-fluid mb-3">
@@ -38,9 +38,9 @@
     </div>
 
     <div class="mt-3">
-        <button class="btn btn-outline-primary" onclick="likePost()">
-            <span id="likesCount" th:text="${post.likesCount}">0</span> 👍
-        </button>
+        <form th:action="@{/posts/{id}/like(id=${post.id})}" method="post" style="display: inline;">
+            <button type="submit" class="btn btn-success"><span>👍 <span th:text="${likesCount}"></span></span></button>
+        </form>
     </div>
 
     <div class="mt-5">
@@ -68,21 +68,6 @@
     </div>
 </div>
 
-<script>
-    function likePost() {
-        fetch('/posts/' + [[${post.id}]] + '/like', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('likesCount').textContent = data.likesCount;
-            })
-            .catch(error => console.error('Ошибка:', error));
-    }
-</script>
 <script>
     document.querySelectorAll('.comment-textarea').forEach(textarea => {
         textarea.addEventListener('keydown', function(event) {
