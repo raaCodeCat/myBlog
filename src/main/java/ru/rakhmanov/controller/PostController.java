@@ -19,7 +19,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 @Controller
-@RequestMapping("/posts/{id}")
+@RequestMapping("/posts")
 @AllArgsConstructor
 public class PostController {
 
@@ -27,7 +27,7 @@ public class PostController {
     private final CommentService commentService;
     private final LikeService likeService;
 
-    @GetMapping
+    @GetMapping("/{id}")
     public String getPost(@PathVariable("id") Integer id, Model model) {
         PostFullDto post = postService.getPostById(id);
         List<Comment> comments = commentService.getCommentsByPostId(id);
@@ -40,28 +40,12 @@ public class PostController {
         return "blog/post";
     }
 
-    @PostMapping("/delete")
-    public String deletePost(@PathVariable("id") Integer id, Model model) {
-        postService.deletePostById(id);
-
-        return "redirect:/";
-    }
-
-    @PostMapping("/comments/add")
-    public String addComment(@PathVariable(name = "id") Integer id,
-                             @RequestParam("commentText") String commentText) {
-
-        commentService.addComment(id, commentText);
-
-        return "redirect:/posts/" + id;
-    }
-
     @PostMapping("/add")
     public String createPost(@RequestParam(name = "title") String title,
-                          @RequestParam(name = "content") String content,
-                          @RequestParam(name = "tags") List<Integer> tags,
-                          @RequestParam(name = "image") MultipartFile image,
-                          RedirectAttributes redirectAttributes) {
+                             @RequestParam(name = "content") String content,
+                             @RequestParam(name = "tags") List<Integer> tags,
+                             @RequestParam(name = "image") MultipartFile image,
+                             RedirectAttributes redirectAttributes) {
 
         try {
             String imageUrl = saveImage(image);
@@ -75,7 +59,23 @@ public class PostController {
         return "redirect:/";
     }
 
-    @PostMapping("/like")
+    @PostMapping("/{id}/delete")
+    public String deletePost(@PathVariable("id") Integer id, Model model) {
+        postService.deletePostById(id);
+
+        return "redirect:/";
+    }
+
+    @PostMapping("/{id}/comments/add")
+    public String addComment(@PathVariable(name = "id") Integer id,
+                             @RequestParam("commentText") String commentText) {
+
+        commentService.addComment(id, commentText);
+
+        return "redirect:/posts/" + id;
+    }
+
+    @PostMapping("/{id}/like")
     public String likePost(@PathVariable(name = "id") Integer id) {
         postService.likePost(id);
 
