@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.rakhmanov.model.Post;
 import ru.rakhmanov.repository.PostRepository;
 
@@ -81,6 +82,12 @@ public class JdbcPostRepository implements PostRepository {
         }, keyHolder);
 
         return (Integer) (keyHolder.getKey());
+    }
+
+    @Override
+    public void updatePost(Integer postId, String title, String imageUrl, String content) {
+        String sql = "update posts set post_title = ?, post_content = ?, post_image_url = ? where post_id = ?";
+        jdbcTemplate.update(sql, title, content, postId, postId);
     }
 
     private static RowMapper<Post> postRowMapper() {

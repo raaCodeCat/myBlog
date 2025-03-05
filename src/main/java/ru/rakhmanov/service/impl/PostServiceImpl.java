@@ -73,17 +73,21 @@ public class PostServiceImpl implements PostService {
 
         Integer postId = postRepository.savePost(post);
 
-        if (tagIds != null || tagIds.size() > 0) {
-            tagRepository.saveTagsToPost(postId, tagIds);
-        }
+        saveTagsToPost(postId, tagIds);
+    }
+
+    @Override
+    public void editPost(Integer postId, String title, String imageUrl, String content, List<Integer> tagIds) {
+        postRepository.updatePost(postId, title, imageUrl, content);
+
+        deleteTagsFromPost(postId);
+        saveTagsToPost(postId, tagIds);
     }
 
     @Override
     @Transactional
     public void likePost(Integer postId) {
         likeRepository.addLikeToPost(postId);
-
-        String i = "1";
     }
 
     private void enrichPostsByTags (List<PostFullDto> postFullDtos, Map<Integer, List<Tag>> tagsByPostIds) {
@@ -96,5 +100,15 @@ public class PostServiceImpl implements PostService {
 
     private void enrichPostByLikes(List<PostFullDto> postFullDtos, Map<Integer, Integer> likesCounts) {
         postFullDtos.forEach(post -> post.setCommentsCount(likesCounts.getOrDefault(post.getId(), 0)));
+    }
+
+    private void saveTagsToPost(Integer postId, List<Integer> tagIds) {
+        if (tagIds != null || tagIds.size() > 0) {
+            tagRepository.saveTagsToPost(postId, tagIds);
+        }
+    }
+
+    private  void deleteTagsFromPost(Integer postId) {
+        tagRepository.deleteTagsFromPost(postId);
     }
 }

@@ -20,33 +20,64 @@
 <div class="container mt-5">
     <h3><a th:href="@{/}" >&lt;&lt;Назад</a></h3>
 </div>
+
 <div class="container mt-5">
-    <h1 th:text="${post.title}">Post Title</h1>
-    <img th:src="${post.imageUrl}" alt="Post Image" class="img-fluid mb-3">
-    <div class="post-content" th:utext="${post.content}"></div>
-
-    <div class="mt-3">
-        <strong>Теги:</strong>
-        <span th:each="tag : ${post.tags}" class="badge bg-secondary me-1" th:text="${tag.name}"></span>
-    </div>
-
-    <div class="mt-3">
-        <a th:href="@{/posts/{id}/edit(id=${post.id})}" class="btn btn-primary">Редактировать</a>
-        <form th:action="@{/posts/{id}/delete(id=${post.id})}" method="post" style="display: inline;">
-            <button type="submit" class="btn btn-danger">Удалить</button>
+    <div id="editPostForm" style="display: none;">
+        <form th:action="@{/posts/{id}/edit(id=${post.id})}" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="title" class="form-label">Название поста</label>
+                <input type="text" class="form-control" id="title" name="title" maxlength="50" required>
+            </div>
+            <div class="mb-3">
+                <label for="image" class="form-label">Картинка</label>
+                <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+            </div>
+            <div class="mb-3">
+                <label for="content" class="form-label">Текст поста</label>
+                <textarea class="form-control" id="content" name="content" rows="5" maxlength="2048" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="tags" class="form-label">Теги</label>
+                <select id="tags" name="tags" class="form-select" multiple="multiple">
+                    <option th:each="tag : ${tags}" th:value="${tag.id}" th:text="${tag.name}"></option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-success">Сохранить</button>
+            <button type="button" class="btn btn-secondary" onclick="hideEditPostForm()">Отмена</button>
         </form>
     </div>
+</div>
 
-    <div class="mt-3">
-        <form th:action="@{/posts/{id}/like(id=${post.id})}" method="post" style="display: inline;">
-            <button type="submit" class="btn btn-success"><span>👍 <span th:text="${likesCount}"></span></span></button>
-        </form>
+<div class="container mt-5">
+    <div id="postForm" style="display: block;">
+        <h1 th:text="${post.title}">Post Title</h1>
+        <img th:src="${post.imageUrl}" alt="Post Image" class="img-fluid mb-3">
+        <div class="post-content" th:utext="${post.content}"></div>
+
+        <div class="mt-3">
+            <strong>Теги:</strong>
+            <span th:each="tag : ${post.tags}" class="badge bg-secondary me-1" th:text="${tag.name}"></span>
+        </div>
+
+        <div class="mt-3">
+            <form th:action="@{/posts/{id}/like(id=${post.id})}" method="post" style="display: inline;">
+                <button type="submit" class="btn btn-success"><span>👍 <span th:text="${likesCount}"></span></span></button>
+            </form>
+        </div>
+
+        <div class="mt-3">
+            <button class="btn btn-primary mb-3" onclick="showEditPostForm()">Редактировать</button>
+
+            <form th:action="@{/posts/{id}/delete(id=${post.id})}" method="post">
+                <button type="submit" class="btn btn-danger">Удалить</button>
+            </form>
+        </div>
     </div>
 
-    <div class="mt-5">
+    <div class="mt-5" id="commentAddForm" style="display: block;">
         <h3>Добавить комментарий</h3>
         <form th:action="@{/posts/{id}/comments/add(id=${post.id})}" method="post">
-            <textarea name="commentText" class="form-control mb-2" required></textarea>
+            <textarea name="commentText" class="form-control mb-2" maxlength="300" required></textarea>
             <button type="submit" class="btn btn-success">Добавить комментарий</button>
         </form>
     </div>
@@ -78,6 +109,19 @@
             }
         });
     });
+</script>
+<script>
+    function showEditPostForm() {
+        document.getElementById('editPostForm').style.display = 'block';
+        document.getElementById('postForm').style.display = 'none';
+        document.getElementById('commentAddForm').style.display = 'none';
+    }
+
+    function hideEditPostForm() {
+        document.getElementById('editPostForm').style.display = 'none';
+        document.getElementById('postForm').style.display = 'block';
+        document.getElementById('commentAddForm').style.display = 'block';
+    }
 </script>
 </body>
 </html>

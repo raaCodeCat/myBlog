@@ -16,4 +16,6 @@ public interface PostRepository {
 
     Integer savePost(Post post);
 
+    void updatePost(Integer postId, String title, String imageUrl, String content);
+
 }

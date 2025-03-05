@@ -16,6 +16,8 @@ public interface PostService {
 
     void createPost(String title, String imageUrl, String content, List<Integer> tagIds);
 
+    void editPost(Integer postId, String title, String imageUrl, String content, List<Integer> tagIds);
+
     void likePost(Integer postId);
 
 }

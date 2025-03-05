@@ -15,4 +15,6 @@ public interface TagRepository {
 
     void saveTagsToPost(Integer postId, List<Integer> tagIds);
 
+    void deleteTagsFromPost(Integer postId);
+
 }

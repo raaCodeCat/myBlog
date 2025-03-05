@@ -8,9 +8,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.rakhmanov.dto.response.PostFullDto;
 import ru.rakhmanov.model.Comment;
+import ru.rakhmanov.model.Tag;
 import ru.rakhmanov.service.CommentService;
 import ru.rakhmanov.service.LikeService;
 import ru.rakhmanov.service.PostService;
+import ru.rakhmanov.service.TagService;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,16 +28,19 @@ public class PostController {
     private final PostService postService;
     private final CommentService commentService;
     private final LikeService likeService;
+    private final TagService tagService;
 
     @GetMapping("/{id}")
     public String getPost(@PathVariable("id") Integer id, Model model) {
         PostFullDto post = postService.getPostById(id);
         List<Comment> comments = commentService.getCommentsByPostId(id);
         Integer likesCount = likeService.getLikesCountByPostId(id);
+        List<Tag> tags = tagService.getAllTags();
 
         model.addAttribute("post", post);
         model.addAttribute("comments", comments);
         model.addAttribute("likesCount", likesCount);
+        model.addAttribute("tags", tags);
 
         return "blog/post";
     }
@@ -57,6 +62,26 @@ public class PostController {
         }
 
         return "redirect:/";
+    }
+
+    @PostMapping("/{id}/edit")
+    public String editPost(@PathVariable(name = "id") Integer id,
+                           @RequestParam(name = "title") String title,
+                           @RequestParam(name = "content") String content,
+                           @RequestParam(name = "tags") List<Integer> tags,
+                           @RequestParam(name = "image") MultipartFile image,
+                           RedirectAttributes redirectAttributes) {
+
+        try {
+            String imageUrl = saveImage(image);
+            postService.editPost(id, title, imageUrl, content, tags);
+            redirectAttributes.addFlashAttribute("message", "Пост успешно создан!");
+        } catch (IOException e) {
+
+            redirectAttributes.addFlashAttribute("error", "Ошибка при загрузке картинки.");
+        }
+
+        return "redirect:/posts/" + id;
     }
 
     @PostMapping("/{id}/delete")

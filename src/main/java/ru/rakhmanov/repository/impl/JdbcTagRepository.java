@@ -75,6 +75,12 @@ public class JdbcTagRepository implements TagRepository {
         jdbcTemplate.update(sql);
     }
 
+    @Override
+    public void deleteTagsFromPost(Integer postId) {
+        String sql = "delete from posttags where post_id = ?";
+        jdbcTemplate.update(sql, postId);
+    }
+
     private static RowMapper<Tag> tagRowMapper() {
         return (rs, rowNum) -> new Tag (
                 rs.getInt("tag_id"),
