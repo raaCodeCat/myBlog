@@ -9,6 +9,4 @@ public interface TagService {
 
     List<Tag> getAllTags();
 
-    Map<Integer, List<Tag>> getTagsByPostIds(List<Integer> postIds);
-
 }

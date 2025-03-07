@@ -11,8 +11,6 @@ public interface CommentRepository {
 
     List<Comment> getCommentsByPostId(Integer postId);
 
-    Integer countCommentsByPostId(Integer postId);
-
     Map<Integer, Integer> getCommentsCountByPostIds(List<Integer> postIds);
 
     void editComment(Integer commentId, String commentText);

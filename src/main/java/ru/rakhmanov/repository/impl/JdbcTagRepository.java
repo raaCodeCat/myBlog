@@ -41,7 +41,7 @@ public class JdbcTagRepository implements TagRepository {
     }
 
     @Override
-    public Map<Integer, List<Tag>> findTagsByPostId(List<Integer> postIds) {
+    public Map<Integer, List<Tag>> findTagsByPostIds(List<Integer> postIds) {
         if (postIds == null || postIds.isEmpty()) {
             return Map.of();
         }

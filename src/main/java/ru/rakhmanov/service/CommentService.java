@@ -10,8 +10,6 @@ public interface CommentService {
 
     List<Comment> getCommentsByPostId(Integer postId);
 
-    Integer getCommentCountByPostId(Integer postId);
-
     void deleteComment(Integer commentId);
 
     void editComment(Integer commentId, String commentText);

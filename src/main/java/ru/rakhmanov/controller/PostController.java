@@ -51,7 +51,7 @@ public class PostController {
     @PostMapping("/add")
     public String createPost(@RequestParam(name = "title") String title,
                              @RequestParam(name = "content") String content,
-                             @RequestParam(name = "tags") List<Integer> tags,
+                             @RequestParam(name = "tags", required = false) List<Integer> tags,
                              @RequestParam(name = "image") MultipartFile image) {
 
         try {
@@ -68,9 +68,8 @@ public class PostController {
     public String editPost(@PathVariable(name = "id") Integer id,
                            @RequestParam(name = "title") String title,
                            @RequestParam(name = "content") String content,
-                           @RequestParam(name = "tags") List<Integer> tags,
-                           @RequestParam(name = "image") MultipartFile image,
-                           RedirectAttributes redirectAttributes) {
+                           @RequestParam(name = "tags", required = false) List<Integer> tags,
+                           @RequestParam(name = "image") MultipartFile image) {
 
         try {
             String imageUrl = saveImage(image);

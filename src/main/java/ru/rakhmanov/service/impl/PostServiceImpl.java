@@ -23,6 +23,7 @@ public class PostServiceImpl implements PostService {
     private final TagRepository tagRepository;
     private final CommentRepository commentRepository;
     private final LikeRepository likeRepository;
+    private final PostMapper postMapper;
 
     @Override
     public List<PostFullDto> getAllPosts(Integer tagId, Integer page, Integer size) {
@@ -31,8 +32,8 @@ public class PostServiceImpl implements PostService {
                 .map(Post::getId)
                 .toList();
 
-        List<PostFullDto> postFullDtos = PostMapper.mapToPostFullDto(posts);
-        Map<Integer, List<Tag>> tagsByPostIds = tagRepository.findTagsByPostId(postIds);
+        List<PostFullDto> postFullDtos = postMapper.mapToPostFullDto(posts);
+        Map<Integer, List<Tag>> tagsByPostIds = tagRepository.findTagsByPostIds(postIds);
         Map<Integer, Integer> commentsCounts = commentRepository.getCommentsCountByPostIds(postIds);
         Map<Integer, Integer> likesCounts = likeRepository.getLikesCountByPostIds(postIds);
 
@@ -46,7 +47,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostFullDto getPostById(Integer id) {
         Post post = postRepository.findPostById(id);
-        PostFullDto postFullDto = PostMapper.mapToPostFullDto(post);
+        PostFullDto postFullDto = postMapper.mapToPostFullDto(post);
         List<Tag> tags = tagRepository.findTagsByPostId(id);
         postFullDto.setTags(tags);
 
@@ -99,11 +100,11 @@ public class PostServiceImpl implements PostService {
     }
 
     private void enrichPostByLikes(List<PostFullDto> postFullDtos, Map<Integer, Integer> likesCounts) {
-        postFullDtos.forEach(post -> post.setCommentsCount(likesCounts.getOrDefault(post.getId(), 0)));
+        postFullDtos.forEach(post -> post.setLikesCount(likesCounts.getOrDefault(post.getId(), 0)));
     }
 
     private void saveTagsToPost(Integer postId, List<Integer> tagIds) {
-        if (tagIds != null || tagIds.size() > 0) {
+        if (!(tagIds == null || tagIds.isEmpty())) {
             tagRepository.saveTagsToPost(postId, tagIds);
         }
     }

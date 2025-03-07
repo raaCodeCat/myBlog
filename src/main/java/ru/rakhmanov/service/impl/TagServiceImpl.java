@@ -7,7 +7,6 @@ import ru.rakhmanov.repository.TagRepository;
 import ru.rakhmanov.service.TagService;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -19,10 +18,4 @@ public class TagServiceImpl implements TagService {
     public List<Tag> getAllTags() {
         return tagRepository.findAllTags();
     }
-
-    @Override
-    public Map<Integer, List<Tag>> getTagsByPostIds(List<Integer> postIds) {
-        return tagRepository.findTagsByPostId(postIds);
-    }
-
 }

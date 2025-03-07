@@ -11,7 +11,7 @@ public interface TagRepository {
 
     List<Tag> findTagsByPostId(Integer postId);
 
-    Map<Integer, List<Tag>> findTagsByPostId(List<Integer> postIds);
+    Map<Integer, List<Tag>> findTagsByPostIds(List<Integer> postIds);
 
     void saveTagsToPost(Integer postId, List<Integer> tagIds);
 

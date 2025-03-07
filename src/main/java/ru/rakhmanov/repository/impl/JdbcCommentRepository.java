@@ -34,13 +34,6 @@ public class JdbcCommentRepository implements CommentRepository {
     }
 
     @Override
-    public Integer countCommentsByPostId(Integer postId) {
-        String sql = "select count(comment_id) from comments where post_id = ?";
-
-        return jdbcTemplate.queryForObject(sql, Integer.class, postId);
-    }
-
-    @Override
     public Map<Integer, Integer> getCommentsCountByPostIds(List<Integer> postIds) {
         if (postIds == null || postIds.isEmpty()) {
             return Map.of();

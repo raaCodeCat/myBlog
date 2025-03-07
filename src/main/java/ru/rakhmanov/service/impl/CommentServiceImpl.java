@@ -27,11 +27,6 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Integer getCommentCountByPostId(Integer postId) {
-        return getCommentCountByPostId(postId);
-    }
-
-    @Override
     @Transactional
     public void editComment(Integer commentId, String commentText) {
         commentRepository.editComment(commentId, commentText);
