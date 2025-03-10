@@ -45,7 +45,7 @@ public class JdbcPostRepository implements PostRepository {
     @Override
     public Post findPostById(Integer id) {
         String sql = "select post_id, post_title, post_content, post_image_url from posts where post_id = ?";
-        return jdbcTemplate.queryForObject(sql, postRowMapper(), id);
+        return jdbcTemplate.query(sql, postRowMapper(), id).stream().findFirst().orElse(null);
     }
 
     @Override

@@ -60,7 +60,7 @@ public class PostController {
             return "redirect:/";
         } catch (IOException e) {
 
-            return "redirect:/";
+            return "blog/error";
         }
     }
 
@@ -77,7 +77,7 @@ public class PostController {
 
             return "redirect:/posts/" + id;
         } catch (IOException e) {
-            return "redirect:/posts/" + id;
+            return "blog/error";
         }
     }
 

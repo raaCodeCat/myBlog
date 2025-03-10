@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.rakhmanov.dto.response.PostFullDto;
+import ru.rakhmanov.exception.NotFoundException;
 import ru.rakhmanov.mapper.PostMapper;
 import ru.rakhmanov.model.Post;
 import ru.rakhmanov.model.Tag;
@@ -47,6 +48,11 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostFullDto getPostById(Integer id) {
         Post post = postRepository.findPostById(id);
+
+        if (post == null) {
+            throw new NotFoundException();
+        }
+
         PostFullDto postFullDto = postMapper.mapToPostFullDto(post);
         List<Tag> tags = tagRepository.findTagsByPostId(id);
         postFullDto.setTags(tags);
