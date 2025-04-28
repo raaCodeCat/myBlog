@@ -47,7 +47,7 @@ public class JdbcLikeRepository implements LikeRepository {
                 .collect(Collectors.toMap(PostLikeCount::getPostId, PostLikeCount::getLikeCount));
     }
 
-    private static RowMapper<PostLikeCount> postLikeCountRowMapper() {
+    public static RowMapper<PostLikeCount> postLikeCountRowMapper() {
         return (rs, rowNum) -> new PostLikeCount(
                 rs.getInt("post_id"),
                 rs.getInt("like_count")
@@ -56,7 +56,7 @@ public class JdbcLikeRepository implements LikeRepository {
 
     @Getter
     @AllArgsConstructor
-    private static class PostLikeCount {
+    public static class PostLikeCount {
         private Integer postId;
         private Integer likeCount;
     }
