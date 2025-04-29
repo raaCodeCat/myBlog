@@ -23,12 +23,11 @@ public class JdbcPostRepositoryIntegrationTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
     private JdbcPostRepository postRepository;
 
     @BeforeEach
     public void setUp() {
-        postRepository = new JdbcPostRepository(jdbcTemplate);
-
         jdbcTemplate.execute("""
             set referential_integrity false;
             truncate table posttags restart identity;

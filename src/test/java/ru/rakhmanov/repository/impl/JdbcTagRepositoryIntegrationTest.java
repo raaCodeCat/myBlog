@@ -22,12 +22,11 @@ class JdbcTagRepositoryIntegrationTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
     private JdbcTagRepository tagRepository;
 
     @BeforeEach
     void setUp() {
-        tagRepository = new JdbcTagRepository(jdbcTemplate);
-
         jdbcTemplate.execute("""
             set referential_integrity false;
             truncate table posttags restart identity;

@@ -21,12 +21,11 @@ class JdbcLikeRepositoryIntegrationTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
     private JdbcLikeRepository likeRepository;
 
     @BeforeEach
     void setUp() {
-        likeRepository = new JdbcLikeRepository(jdbcTemplate);
-
         jdbcTemplate.execute("""
             set referential_integrity false;
             truncate table postlikes restart identity;

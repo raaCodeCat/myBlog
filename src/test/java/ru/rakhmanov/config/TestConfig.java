@@ -46,19 +46,19 @@ public class TestConfig {
     public JdbcCommentRepository commentRepository(JdbcTemplate jdbcTemplate) {
         return new JdbcCommentRepository(jdbcTemplate);
     }
-//
-//    @Bean
-//    public JdbcLikeRepository likeRepository(JdbcTemplate jdbcTemplate) {
-//        return new JdbcLikeRepository(jdbcTemplate);
-//    }
-//
-//    @Bean
-//    public JdbcPostRepository postRepository(JdbcTemplate jdbcTemplate) {
-//        return new JdbcPostRepository(jdbcTemplate);
-//    }
-//
-//    @Bean
-//    public JdbcTagRepository tagRepository(JdbcTemplate jdbcTemplate) {
-//        return new JdbcTagRepository(jdbcTemplate);
-//    }
+
+    @Bean
+    public JdbcLikeRepository likeRepository(JdbcTemplate jdbcTemplate) {
+        return new JdbcLikeRepository(jdbcTemplate);
+    }
+
+    @Bean
+    public JdbcPostRepository postRepository(JdbcTemplate jdbcTemplate) {
+        return new JdbcPostRepository(jdbcTemplate);
+    }
+
+    @Bean
+    public JdbcTagRepository tagRepository(JdbcTemplate jdbcTemplate) {
+        return new JdbcTagRepository(jdbcTemplate);
+    }
 }
