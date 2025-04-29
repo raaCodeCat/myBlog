@@ -60,7 +60,7 @@ public class JdbcCommentRepository implements CommentRepository {
         jdbcTemplate.update(sql, commentId);
     }
 
-    private static RowMapper<Comment> commentRowMapper() {
+    public static RowMapper<Comment> commentRowMapper() {
         return (rs, rowNum) -> new Comment(
                 rs.getInt("comment_id"),
                 rs.getInt("post_id"),
@@ -68,7 +68,7 @@ public class JdbcCommentRepository implements CommentRepository {
         );
     }
 
-    private static RowMapper<PostCommentCount> postCommentCountRowMapper() {
+    public static RowMapper<PostCommentCount> postCommentCountRowMapper() {
         return (rs, rowNum) -> new PostCommentCount(
                 rs.getInt("post_id"),
                 rs.getInt("comment_count")
@@ -77,7 +77,7 @@ public class JdbcCommentRepository implements CommentRepository {
 
     @Getter
     @AllArgsConstructor
-    private static class PostCommentCount {
+    public static class PostCommentCount {
         private Integer postId;
         private Integer commentCount;
     }

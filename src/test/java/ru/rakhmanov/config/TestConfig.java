@@ -42,10 +42,10 @@ public class TestConfig {
         populator.execute(dataSource);
     }
 
-//    @Bean
-//    public JdbcCommentRepository commentRepository(JdbcTemplate jdbcTemplate) {
-//        return new JdbcCommentRepository(jdbcTemplate);
-//    }
+    @Bean
+    public JdbcCommentRepository commentRepository(JdbcTemplate jdbcTemplate) {
+        return new JdbcCommentRepository(jdbcTemplate);
+    }
 //
 //    @Bean
 //    public JdbcLikeRepository likeRepository(JdbcTemplate jdbcTemplate) {
