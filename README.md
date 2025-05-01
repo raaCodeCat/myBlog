@@ -42,7 +42,7 @@
 ### Сборка и запуск
 Клонировать репозиторий:
 ```
-git clone https://github.com/yourusername/spring-blog-app.git
+git clone https://github.com/raaCodeCat/myBlog.git
 ```
 
 Собрать проект:
