@@ -43,8 +43,8 @@ create table if not exists postlikes (
 
 create index if not exists idx_postlikes_post_id on postlikes (post_id);
 
-insert into tags(tag_name) values
-    ('Компьютеры'),
-    ('Путешествия'),
-    ('Котики'),
-    ('Красивое');
+-- insert into tags(tag_name) values
+--     ('Компьютеры'),
+--     ('Путешествия'),
+--     ('Котики'),
+--     ('Красивое');

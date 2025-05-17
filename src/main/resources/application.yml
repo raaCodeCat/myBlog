@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: myBlog
+  profiles:
+    active: dev
+
+logging:
+  level:
+    org.springframework.web: DEBUG
