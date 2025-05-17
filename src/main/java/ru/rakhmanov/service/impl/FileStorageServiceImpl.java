@@ -1,5 +1,6 @@
 package ru.rakhmanov.service.impl;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.rakhmanov.service.FileStorageService;
@@ -12,12 +13,12 @@ import java.nio.file.Paths;
 @Service
 public class FileStorageServiceImpl implements FileStorageService {
 
-    private static final String LINK_PATH = "/uploads/";
-    private static final String UPLOAD_DIR = System.getProperty("catalina.base") + "/webapps" + LINK_PATH;
+    @Value("${app.file.upload-dir}")
+    private String uploadDir;
 
     @Override
     public String saveImage(MultipartFile image) {
-        Path uploadPath = Paths.get(UPLOAD_DIR);
+        Path uploadPath = Paths.get(uploadDir);
 
         try {
             if (!Files.exists(uploadPath)) {
@@ -27,9 +28,9 @@ public class FileStorageServiceImpl implements FileStorageService {
             String fileName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
             Path filePath = uploadPath.resolve(fileName);
 
-            Files.write(filePath, image.getBytes());
+            Files.copy(image.getInputStream(), filePath);
 
-            return LINK_PATH + fileName;
+            return uploadDir + fileName;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

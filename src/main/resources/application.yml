@@ -3,7 +3,18 @@ spring:
     name: myBlog
   profiles:
     active: dev
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
+    thymeleaf:
+      cache: false
 
 logging:
   level:
     org.springframework.web: DEBUG
+
+app:
+  file:
+    upload-dir: /uploads/
+    public-url: /uploads/**
