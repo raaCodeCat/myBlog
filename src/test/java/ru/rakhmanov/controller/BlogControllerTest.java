@@ -1,13 +1,10 @@
 package ru.rakhmanov.controller;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.rakhmanov.dto.response.PostFullDto;
 import ru.rakhmanov.model.Tag;
 import ru.rakhmanov.service.CommentService;
@@ -22,29 +19,20 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@ExtendWith(MockitoExtension.class)
+@WebMvcTest(controllers = BlogController.class)
 class BlogControllerTest {
 
-    @Mock
+    @MockitoBean
     private PostService postService;
 
-    @Mock
+    @MockitoBean
     private TagService tagService;
 
-    @Mock
+    @MockitoBean
     private CommentService commentService;
 
-    @InjectMocks
-    private BlogController blogController;
-
+    @Autowired
     private MockMvc mockMvc;
-
-    @BeforeEach
-    void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(blogController)
-                .addPlaceholderValue("server.servlet.context-path", "")
-                .build();
-    }
 
     @Test
     void getBlogPage_shouldReturnCorrectView() throws Exception {

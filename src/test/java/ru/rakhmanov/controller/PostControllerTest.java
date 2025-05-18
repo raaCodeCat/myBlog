@@ -1,16 +1,12 @@
 package ru.rakhmanov.controller;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.rakhmanov.dto.response.PostFullDto;
-import ru.rakhmanov.errorhandler.ErrorHandler;
 import ru.rakhmanov.model.Comment;
 import ru.rakhmanov.model.Tag;
 import ru.rakhmanov.service.*;
@@ -23,36 +19,26 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@ExtendWith(MockitoExtension.class)
+@WebMvcTest(controllers = PostController.class)
 class PostControllerTest {
 
-    @Mock
+    @MockitoBean
     private PostService postService;
 
-    @Mock
+    @MockitoBean
     private CommentService commentService;
 
-    @Mock
+    @MockitoBean
     private LikeService likeService;
 
-    @Mock
+    @MockitoBean
     private TagService tagService;
 
-    @Mock
+    @MockitoBean
     private FileStorageService fileStorageService;
 
-    @InjectMocks
-    private PostController postController;
-
+    @Autowired
     private MockMvc mockMvc;
-
-    @BeforeEach
-    void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(postController)
-                .setControllerAdvice(new ErrorHandler())
-                .addPlaceholderValue("server.servlet.context-path", "")
-                .build();
-    }
 
     @Test
     void getPost_shouldReturnPostViewWithAttributes() throws Exception {

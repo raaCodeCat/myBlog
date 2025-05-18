@@ -1,13 +1,10 @@
 package ru.rakhmanov.controller;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.rakhmanov.service.CommentService;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -15,23 +12,14 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@ExtendWith(MockitoExtension.class)
+@WebMvcTest(controllers = CommentController.class)
 class CommentControllerTest {
 
-    @Mock
+    @MockitoBean
     private CommentService commentService;
 
-    @InjectMocks
-    private CommentController commentController;
-
+    @Autowired
     private MockMvc mockMvc;
-
-    @BeforeEach
-    void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(commentController)
-                .addPlaceholderValue("server.servlet.context-path", "")
-                .build();
-    }
 
     @Test
     void editComment_shouldUpdateCommentAndRedirect() throws Exception {
