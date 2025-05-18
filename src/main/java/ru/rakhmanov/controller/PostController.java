@@ -31,12 +31,11 @@ public class PostController {
     public String getPost(@PathVariable("id") Integer id, Model model) {
         PostFullDto post = postService.getPostById(id);
         List<Comment> comments = commentService.getCommentsByPostId(id);
-        Integer likesCount = likeService.getLikesCountByPostId(id);
         List<Tag> tags = tagService.getAllTags();
 
         model.addAttribute("post", post);
         model.addAttribute("comments", comments);
-        model.addAttribute("likesCount", likesCount);
+        model.addAttribute("likesCount", post.getLikesCount());
         model.addAttribute("tags", tags);
 
         return "blog/post";

@@ -18,16 +18,14 @@ public class PostMapper {
     }
 
     public PostFullDto mapToPostFullDto(Post post) {
-        PostFullDto postFullDto = new PostFullDto(
+        return new PostFullDto(
                 post.getId(),
                 post.getTitle(),
                 post.getContent(),
                 post.getImageUrl(),
                 List.of(),
-                0,
-                0
+                post.getLikesCount(),
+                post.getCommentsCount()
         );
-
-        return postFullDto;
     }
 }

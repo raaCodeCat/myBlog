@@ -21,30 +21,54 @@ public class JdbcPostRepository implements PostRepository {
     @Override
     public List<Post> findAllPosts(Integer tagId, Integer page, Integer size) {
         String offsetLimit = "";
-        String joinString = "";
+        String joinPostTagsString = "";
         String whereString = "";
 
         if (tagId != null) {
-            joinString += "join posttags pt on p.post_id = pt.post_id ";
+            joinPostTagsString += " join posttags pt on p.post_id = pt.post_id ";
             whereString += "and pt.tag_id = " + tagId + " ";
         }
 
         if (page != null && size != null) {
             int offset = page * size;
-            offsetLimit = "limit " + size + " offset " + offset;
+            offsetLimit = " limit " + size + " offset " + offset;
         }
 
-        String sql = "select p.post_id, p.post_title, p.post_content, p.post_image_url from posts p " +
-                joinString +
-                "where (1 =  1) " +
-                whereString + " order by p.post_id desc " + offsetLimit;
+        String sql = """
+            select
+            pt.post_id, pt.post_title, pt.post_content, pt.post_image_url,
+            count(distinct pl.postlikes_id) likes_count,
+            count(distinct pc.comment_id) comments_count
+            from (
+                select p.post_id, p.post_title, p.post_content, p.post_image_url
+                from posts p
+            """ + joinPostTagsString + """
+                where (1 =  1)
+            """ + whereString + """
+                order by p.post_id desc
+            """ + offsetLimit + """
+            ) pt
+            left join postlikes pl on pl.post_id = pt.post_id
+            left join comments pc on pc.post_id = pt.post_id
+            group by pt.post_id, pt.post_title, pt.post_content, pt.post_image_url
+           """;
 
         return jdbcTemplate.query(sql, postRowMapper());
     }
 
     @Override
     public Post findPostById(Integer id) {
-        String sql = "select post_id, post_title, post_content, post_image_url from posts where post_id = ?";
+        String sql = """
+            select p.post_id, p.post_title, p.post_content, p.post_image_url, 
+            count(distinct pl.postlikes_id) likes_count,
+            count(distinct pc.comment_id) comments_count
+            from posts p            
+            left join postlikes pl on pl.post_id = p.post_id
+            left join comments pc on pc.post_id = p.post_id
+            where p.post_id = ?
+            group by p.post_id, p.post_title, p.post_content, p.post_image_url
+        """;
+
         return jdbcTemplate.query(sql, postRowMapper(), id).stream().findFirst().orElse(null);
     }
 
@@ -94,7 +118,9 @@ public class JdbcPostRepository implements PostRepository {
                 rs.getInt("post_id"),
                 rs.getString("post_title"),
                 rs.getString("post_content"),
-                rs.getString("post_image_url")
+                rs.getString("post_image_url"),
+                rs.getInt("likes_count"),
+                rs.getInt("comments_count")
         );
     }
 }

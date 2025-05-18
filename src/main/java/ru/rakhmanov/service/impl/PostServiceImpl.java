@@ -8,7 +8,6 @@ import ru.rakhmanov.exception.NotFoundException;
 import ru.rakhmanov.mapper.PostMapper;
 import ru.rakhmanov.model.Post;
 import ru.rakhmanov.model.Tag;
-import ru.rakhmanov.repository.CommentRepository;
 import ru.rakhmanov.repository.LikeRepository;
 import ru.rakhmanov.repository.PostRepository;
 import ru.rakhmanov.repository.TagRepository;
@@ -22,7 +21,6 @@ import java.util.Map;
 public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final TagRepository tagRepository;
-    private final CommentRepository commentRepository;
     private final LikeRepository likeRepository;
     private final PostMapper postMapper;
 
@@ -35,12 +33,8 @@ public class PostServiceImpl implements PostService {
 
         List<PostFullDto> postFullDtos = postMapper.mapToPostFullDto(posts);
         Map<Integer, List<Tag>> tagsByPostIds = tagRepository.findTagsByPostIds(postIds);
-        Map<Integer, Integer> commentsCounts = commentRepository.getCommentsCountByPostIds(postIds);
-        Map<Integer, Integer> likesCounts = likeRepository.getLikesCountByPostIds(postIds);
 
         enrichPostsByTags(postFullDtos, tagsByPostIds);
-        enrichPostByComments(postFullDtos, commentsCounts);
-        enrichPostByLikes(postFullDtos, likesCounts);
 
         return postFullDtos;
     }
@@ -99,14 +93,6 @@ public class PostServiceImpl implements PostService {
 
     private void enrichPostsByTags (List<PostFullDto> postFullDtos, Map<Integer, List<Tag>> tagsByPostIds) {
         postFullDtos.forEach(post -> post.setTags(tagsByPostIds.getOrDefault(post.getId(), List.of())));
-    }
-
-    private void enrichPostByComments(List<PostFullDto> postFullDtos, Map<Integer, Integer> commentsCounts) {
-        postFullDtos.forEach(post -> post.setCommentsCount(commentsCounts.getOrDefault(post.getId(), 0)));
-    }
-
-    private void enrichPostByLikes(List<PostFullDto> postFullDtos, Map<Integer, Integer> likesCounts) {
-        postFullDtos.forEach(post -> post.setLikesCount(likesCounts.getOrDefault(post.getId(), 0)));
     }
 
     private void saveTagsToPost(Integer postId, List<Integer> tagIds) {
