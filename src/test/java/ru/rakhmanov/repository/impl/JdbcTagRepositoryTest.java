@@ -2,12 +2,11 @@ package ru.rakhmanov.repository.impl;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import ru.rakhmanov.config.MockJdbcTestConfig;
 import ru.rakhmanov.model.PostTag;
 import ru.rakhmanov.model.Tag;
 
@@ -21,13 +20,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest(classes = MockJdbcTestConfig.class)
 class JdbcTagRepositoryTest {
 
-    @Mock
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @InjectMocks
+    @Autowired
     private JdbcTagRepository tagRepository;
 
     private Tag tag1;
@@ -37,6 +36,8 @@ class JdbcTagRepositoryTest {
 
     @BeforeEach
     void setUp() {
+        reset(jdbcTemplate);
+
         tag1 = new Tag(1, "Tag1");
         tag2 = new Tag(2, "Tag2");
         postTag1 = new PostTag(1, 1, "Tag1");

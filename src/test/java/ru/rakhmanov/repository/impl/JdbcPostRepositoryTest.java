@@ -3,19 +3,16 @@ package ru.rakhmanov.repository.impl;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import ru.rakhmanov.config.MockJdbcTestConfig;
 import ru.rakhmanov.model.Post;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -27,25 +24,21 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest(classes = MockJdbcTestConfig.class)
 class JdbcPostRepositoryTest {
 
-    @Mock
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @Mock
-    private Connection connection;
-
-    @Mock
-    private PreparedStatement preparedStatement;
-
-    @InjectMocks
+    @Autowired
     private JdbcPostRepository postRepository;
 
     private Post post;
 
     @BeforeEach
     void setUp() {
+        reset(jdbcTemplate);
+
         post = new Post(1, "Test Title", "Test Content", "test.jpg");
     }
 

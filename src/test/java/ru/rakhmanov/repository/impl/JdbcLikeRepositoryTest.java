@@ -1,12 +1,12 @@
 package ru.rakhmanov.repository.impl;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import ru.rakhmanov.config.MockJdbcTestConfig;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,14 +16,19 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest(classes = MockJdbcTestConfig.class)
 class JdbcLikeRepositoryTest {
 
-    @Mock
+    @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @InjectMocks
+    @Autowired
     private JdbcLikeRepository likeRepository;
+
+    @BeforeEach
+    void setUp() {
+        reset(jdbcTemplate);
+    }
 
     @Test
     void addLikeToPost_ShouldExecuteInsert() {

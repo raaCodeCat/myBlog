@@ -2,12 +2,10 @@ package ru.rakhmanov.repository.impl;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import ru.rakhmanov.config.TestConfig;
+import ru.rakhmanov.config.RepositoryIntegrationTestConfig;
 import ru.rakhmanov.model.Post;
 
 import java.util.List;
@@ -16,8 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = TestConfig.class)
+@SpringBootTest(classes = RepositoryIntegrationTestConfig.class)
 public class JdbcPostRepositoryIntegrationTest {
 
     @Autowired
