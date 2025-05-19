@@ -46,11 +46,9 @@ class PostControllerTest {
         PostFullDto post = new PostFullDto();
         List<Comment> comments = Collections.singletonList(new Comment());
         List<Tag> tags = Collections.singletonList(new Tag());
-        int likesCount = 5;
 
         when(postService.getPostById(postId)).thenReturn(post);
         when(commentService.getCommentsByPostId(postId)).thenReturn(comments);
-        when(likeService.getLikesCountByPostId(postId)).thenReturn(likesCount);
         when(tagService.getAllTags()).thenReturn(tags);
 
         mockMvc.perform(get("/posts/{id}", postId))
@@ -58,12 +56,11 @@ class PostControllerTest {
                 .andExpect(view().name("blog/post"))
                 .andExpect(model().attribute("post", post))
                 .andExpect(model().attribute("comments", comments))
-                .andExpect(model().attribute("likesCount", likesCount))
+                .andExpect(model().attribute("likesCount", post.getLikesCount()))
                 .andExpect(model().attribute("tags", tags));
 
         verify(postService, times(1)).getPostById(postId);
         verify(commentService, times(1)).getCommentsByPostId(postId);
-        verify(likeService, times(1)).getLikesCountByPostId(postId);
         verify(tagService, times(1)).getAllTags();
     }
 
