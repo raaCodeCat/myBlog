@@ -15,19 +15,17 @@
 
 ### Основной стек
 - **Java 21**
-- **Spring Framework 6.2.1**
-    - Spring MVC
-    - Spring Data JDBC
-    - Spring Test
-- **Сервер**: Tomcat 10+
+- **Spring Boot 3.4.5**
+    - spring-boot-starter-web
+    - spring-boot-starter-data-jdbc
+    - spring-boot-starter-thymeleaf
+    - spring-boot-starter-test
 - **База данных**: H2 (in-memory)
 - **Шаблонизатор**: Thymeleaf 3.1.2
-- **Система сборки**: Maven
+- **Система сборки**: Gradle
 
 ### Тестирование
-- JUnit 5
-- Mockito
-- Spring TestContext Framework
+- Spring Boot Test
 
 ### Схема базы данных
 ![img.png](data_base_scheme.png)
@@ -36,8 +34,7 @@
 
 ### Требования
 - JDK 21
-- Maven 3.9+
-- Сервлет-контейнер Tomcat 10+
+- Gradle 8
 
 ### Сборка и запуск
 Клонировать репозиторий:
@@ -47,7 +44,15 @@ git clone https://github.com/raaCodeCat/myBlog.git
 
 Собрать проект:
 ```
-mvn clean package
+./gradlew bootJar
 ```
+Файл будет создан в: build/libs/myBlog-0.0.1-SNAPSHOT.jar
 
-Развернуть WAR-файл в сервлет-контейнере
+Запустить приложение:
+```
+java -jar build/libs/myBlog-0.0.1-SNAPSHOT.jar
+```
+После запуска приложение будет достепно по аддресу
+```
+http://localhost:8080/
+```
