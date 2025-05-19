@@ -2,10 +2,11 @@ package ru.rakhmanov.service.impl;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import ru.rakhmanov.model.Tag;
 import ru.rakhmanov.repository.TagRepository;
 
@@ -18,13 +19,14 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
+@ContextConfiguration(classes = TagServiceImpl.class)
 class TagServiceImplTest {
 
-    @Mock
+    @MockitoBean
     private TagRepository tagRepository;
 
-    @InjectMocks
+    @Autowired
     private TagServiceImpl tagService;
 
     private List<Tag> tags;

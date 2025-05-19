@@ -2,15 +2,14 @@ package ru.rakhmanov.service.impl;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import ru.rakhmanov.dto.response.PostFullDto;
 import ru.rakhmanov.mapper.PostMapper;
 import ru.rakhmanov.model.Post;
 import ru.rakhmanov.model.Tag;
-import ru.rakhmanov.repository.CommentRepository;
 import ru.rakhmanov.repository.LikeRepository;
 import ru.rakhmanov.repository.PostRepository;
 import ru.rakhmanov.repository.TagRepository;
@@ -26,25 +25,23 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
+@ContextConfiguration(classes = PostServiceImpl.class)
 class PostServiceImplTest {
 
-    @Mock
+    @MockitoBean
     private PostRepository postRepository;
 
-    @Mock
+    @MockitoBean
     private TagRepository tagRepository;
 
-    @Mock
-    private CommentRepository commentRepository;
-
-    @Mock
+    @MockitoBean
     private LikeRepository likeRepository;
 
-    @Mock
+    @MockitoBean
     private PostMapper postMapper;
 
-    @InjectMocks
+    @Autowired
     private PostServiceImpl postService;
 
     private Post post;
@@ -59,12 +56,16 @@ class PostServiceImplTest {
         post.setTitle("Test Post");
         post.setContent("Test Content");
         post.setImageUrl("test.jpg");
+        post.setLikesCount(10);
+        post.setCommentsCount(5);
 
         postFullDto = new PostFullDto();
         postFullDto.setId(1);
         postFullDto.setTitle("Test Post");
         postFullDto.setContent("Test Content");
         postFullDto.setImageUrl("test.jpg");
+        postFullDto.setLikesCount(10);
+        postFullDto.setCommentsCount(5);
 
         tags = List.of(new Tag(1, "Tag1"), new Tag(2, "Tag2"));
         tagIds = List.of(1, 2);
@@ -75,8 +76,6 @@ class PostServiceImplTest {
         when(postRepository.findAllPosts(null, 0, 10)).thenReturn(List.of(post));
         when(postMapper.mapToPostFullDto(List.of(post))).thenReturn(List.of(postFullDto));
         when(tagRepository.findTagsByPostIds(List.of(1))).thenReturn(Map.of(1, tags));
-        when(commentRepository.getCommentsCountByPostIds(List.of(1))).thenReturn(Map.of(1, 5));
-        when(likeRepository.getLikesCountByPostIds(List.of(1))).thenReturn(Map.of(1, 10));
 
         List<PostFullDto> actual = postService.getAllPosts(null, 0, 10);
 
@@ -89,8 +88,6 @@ class PostServiceImplTest {
 
         verify(postRepository, times(1)).findAllPosts(null, 0, 10);
         verify(tagRepository, times(1)).findTagsByPostIds(List.of(1));
-        verify(commentRepository, times(1)).getCommentsCountByPostIds(List.of(1));
-        verify(likeRepository, times(1)).getLikesCountByPostIds(List.of(1));
     }
 
     @Test
