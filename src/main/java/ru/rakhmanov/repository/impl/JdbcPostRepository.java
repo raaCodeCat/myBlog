@@ -113,6 +113,12 @@ public class JdbcPostRepository implements PostRepository {
         jdbcTemplate.update(sql, title, content, imageUrl, postId);
     }
 
+    @Override
+    public List<String> getPostImageUrls() {
+        String sql = "select post_image_url from posts";
+        return jdbcTemplate.queryForList(sql, String.class);
+    }
+
     private static RowMapper<Post> postRowMapper() {
         return (rs, rowNum) -> new Post(
                 rs.getInt("post_id"),

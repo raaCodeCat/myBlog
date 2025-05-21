@@ -18,4 +18,6 @@ public interface PostRepository {
 
     void updatePost(Integer postId, String title, String imageUrl, String content);
 
+    List<String> getPostImageUrls();
+
 }

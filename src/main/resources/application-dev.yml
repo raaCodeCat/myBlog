@@ -7,3 +7,8 @@ spring:
   sql:
     init:
       encoding: UTF-8
+
+job:
+  image-garbage-collector:
+    enabled: true
+    cron: "0 0 1 * * ?"
