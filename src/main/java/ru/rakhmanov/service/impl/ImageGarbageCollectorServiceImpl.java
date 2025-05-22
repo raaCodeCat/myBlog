@@ -9,6 +9,7 @@ import ru.rakhmanov.service.ImageGarbageCollectorService;
 
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @Slf4j
@@ -20,12 +21,19 @@ public class ImageGarbageCollectorServiceImpl implements ImageGarbageCollectorSe
 
     @Override
     public void cleanupImages() {
+        AtomicInteger deletedImagesCount = new AtomicInteger(0);
+
         List<String> listImageUrlsInDb = getPostImages();
         List<String> listImagesInFolder = getAllImageNames();
 
         listImagesInFolder.stream()
                 .filter(imageName -> !listImageUrlsInDb.contains(imageName))
-                .forEach(fileStorageService::deleteFile);
+                .forEach(path -> {
+                    deletedImagesCount.getAndIncrement();
+                    fileStorageService.deleteFile(path);
+                });
+
+        log.info("Deleted {} images from folder", deletedImagesCount.get());
     }
 
     private List<String> getPostImages() {

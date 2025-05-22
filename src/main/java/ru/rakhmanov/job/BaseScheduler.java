@@ -3,16 +3,18 @@ package ru.rakhmanov.job;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class BaseScheduler {
+public abstract class BaseScheduler {
 
-    protected void execute(String schedulerName) {
+    protected void execute() {
+        String schedulerName = getSchedulerName();
+        long startTime = System.currentTimeMillis();
+
         beforeProcess(schedulerName);
         process();
         afterProcess(schedulerName);
-    }
 
-    protected void process() {
-
+        long endTime = System.currentTimeMillis();
+        log.info("Scheduler [{}] worked {}ms", schedulerName, endTime - startTime);
     }
 
     private void beforeProcess(String schedulerName) {
@@ -22,4 +24,10 @@ public class BaseScheduler {
     private void afterProcess(String schedulerName) {
         log.info("Scheduler [{}] is finished processing", schedulerName);
     }
+
+    protected String getSchedulerName() {
+        return this.getClass().getName();
+    }
+
+    protected abstract void process();
 }

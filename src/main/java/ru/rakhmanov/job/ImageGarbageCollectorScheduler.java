@@ -13,13 +13,19 @@ import ru.rakhmanov.service.ImageGarbageCollectorService;
 @ConditionalOnProperty(name = "job.image-garbage-collector.enabled", havingValue = "true")
 public class ImageGarbageCollectorScheduler extends BaseScheduler {
 
-    private final String schedulerName = "ImageGarbageCollectorScheduler";
+    private final String SCHEDULER_NAME = "ImageGarbageCollectorScheduler";
 
     private final ImageGarbageCollectorService imageGarbageCollectorService;
 
+    @Override
     @Scheduled(cron = "${job.image-garbage-collector.cron}")
     protected void execute() {
-        super.execute(schedulerName);
+        super.execute();
+    }
+
+    @Override
+    protected String getSchedulerName() {
+        return SCHEDULER_NAME;
     }
 
     @Override
